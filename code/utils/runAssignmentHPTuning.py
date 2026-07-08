@@ -9,7 +9,7 @@ import sys
 import subprocess
 import time
 
-Define the area codes to process (all 17 Oxford areas)
+# Define the area codes to process (all 17 Oxford areas)
 AREA_CODES = [
     'E02005940', 'E02005941', 'E02005942', 'E02005943',
     'E02005944', 'E02005945', 'E02005946', 'E02005947',
