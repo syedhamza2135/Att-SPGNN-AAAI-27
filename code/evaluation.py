@@ -62,7 +62,8 @@ def create_geo_plot_trace(selected_area_code, current_dir):
         gdf_msoa = gdf_msoa[~gdf_msoa["MSOA21CD"].isin(exclude_codes)]
         
         # Clip to red boundary
-        red_union = red_bnd.unary_union
+        # union_all() replaces the deprecated `unary_union` property (GeoPandas >= 1.0)
+        red_union = red_bnd.union_all()
         gdf_clip = gdf_msoa[gdf_msoa.intersects(red_union)].copy()
         
         # Create color column: selected area gets color 1, others get color 0
