@@ -939,17 +939,6 @@ for lr in learning_rates:
             'training_time'   : run_time_human
         })
 
-        # Saved later (after the loop) exactly as in the original script
-        performance_data = {
-            'area_code'             : selected_area_code,
-            'num_persons'           : num_persons,
-            'training_time_seconds' : run_time_sec,
-            'learning_rate'         : lr,
-            'hidden_channels'       : hidden_channels,
-            'final_accuracy'        : final_dist_acc,
-            'rmse'                  : overall_rmse
-        }
-
         print(f"✓ done | loss={final_loss:.4f} "
               f"| avg-acc={avg_dist_acc:.4f} "
               f"| final-acc={final_dist_acc:.4f} "
@@ -964,7 +953,9 @@ for lr in learning_rates:
                 'predictions': predictions,
                 'lr': lr,
                 'hidden_channels': hidden_channels,
-                'convergence_data': convergence_data
+                'convergence_data': convergence_data,
+                'rmse': overall_rmse,
+                'training_time_seconds': run_time_sec
             })
             print(f"✓ New best model! Accuracy: {final_dist_acc:.4f}")
 
@@ -1000,7 +991,9 @@ if best_model_info['predictions'] is not None:
         'age_pred': best_model_info['predictions'][1].cpu().numpy(),
         'ethnicity_pred': best_model_info['predictions'][2].cpu().numpy(),
         'religion_pred': best_model_info['predictions'][3].cpu().numpy(),
-        'marital_pred': best_model_info['predictions'][4].cpu().numpy()
+        'marital_pred': best_model_info['predictions'][4].cpu().numpy(),
+        'qualification_pred': best_model_info['predictions'][5].cpu().numpy(),
+        'household_composition_pred': best_model_info['predictions'][6].cpu().numpy()
     }
 else:
     print("Warning: No predictions available from training. Model may have failed to train.")
@@ -1011,7 +1004,9 @@ else:
         'age_pred': dummy_pred.cpu().numpy(),
         'ethnicity_pred': dummy_pred.cpu().numpy(),
         'religion_pred': dummy_pred.cpu().numpy(),
-        'marital_pred': dummy_pred.cpu().numpy()
+        'marital_pred': dummy_pred.cpu().numpy(),
+        'qualification_pred': dummy_pred.cpu().numpy(),
+        'household_composition_pred': dummy_pred.cpu().numpy()
     }
 # np.save(os.path.join(output_dir, 'best_individual_model_predictions.npy'), best_predictions)
 
@@ -1029,7 +1024,16 @@ if 'convergence_data' in best_model_info:
     convergence_df = pd.DataFrame(best_model_info['convergence_data'])
     convergence_df.to_csv(os.path.join(output_dir, 'convergence_data.csv'), index=False)
 
-# Save performance data
+# Save performance data (built from the BEST model, not the last grid-search run)
+performance_data = {
+    'area_code'             : selected_area_code,
+    'num_persons'           : num_persons,
+    'training_time_seconds' : best_model_info.get('training_time_seconds'),
+    'learning_rate'         : best_model_info['lr'],
+    'hidden_channels'       : best_model_info['hidden_channels'],
+    'final_accuracy'        : best_model_info['accuracy'],
+    'rmse'                  : best_model_info.get('rmse')
+}
 performance_df = pd.DataFrame([performance_data])
 performance_df.to_csv(os.path.join(output_dir, 'performance_data.csv'), index=False)
 

@@ -499,21 +499,21 @@ def analyze_per_area_performance(outputs_dir, area_codes):
     print("-" * 160)
     
     for _, row in results_df.iterrows():
-        pop_str = str(int(row['population'])) if row['population'] else 'N/A'
-        hh_str = str(int(row['households'])) if row['households'] else 'N/A'
-        
-        ind_loss = f"{row['ind_loss']:.2f}" if row['ind_loss'] else 'N/A'
-        ind_rmse = f"{row['ind_rmse']:.2f}" if row['ind_rmse'] else 'N/A'
-        ind_acc = f"{row['ind_acc']:.2f}" if row['ind_acc'] else 'N/A'
+        pop_str = str(int(row['population'])) if pd.notna(row['population']) else 'N/A'
+        hh_str = str(int(row['households'])) if pd.notna(row['households']) else 'N/A'
+
+        ind_loss = f"{row['ind_loss']:.2f}" if pd.notna(row['ind_loss']) else 'N/A'
+        ind_rmse = f"{row['ind_rmse']:.2f}" if pd.notna(row['ind_rmse']) else 'N/A'
+        ind_acc = f"{row['ind_acc']:.2f}" if pd.notna(row['ind_acc']) else 'N/A'
         ind_time = format_time(row['ind_time'])
-        
-        hh_loss = f"{row['hh_loss']:.2f}" if row['hh_loss'] else 'N/A'
-        hh_rmse = f"{row['hh_rmse']:.2f}" if row['hh_rmse'] else 'N/A'
-        hh_acc = f"{row['hh_acc']:.2f}" if row['hh_acc'] else 'N/A'
+
+        hh_loss = f"{row['hh_loss']:.2f}" if pd.notna(row['hh_loss']) else 'N/A'
+        hh_rmse = f"{row['hh_rmse']:.2f}" if pd.notna(row['hh_rmse']) else 'N/A'
+        hh_acc = f"{row['hh_acc']:.2f}" if pd.notna(row['hh_acc']) else 'N/A'
         hh_time = format_time(row['hh_time'])
-        
-        assign_loss = f"{row['assign_loss']:.2f}" if row['assign_loss'] else 'N/A'
-        assign_acc = f"{row['assign_acc']:.2f}" if row['assign_acc'] else 'N/A'
+
+        assign_loss = f"{row['assign_loss']:.2f}" if pd.notna(row['assign_loss']) else 'N/A'
+        assign_acc = f"{row['assign_acc']:.2f}" if pd.notna(row['assign_acc']) else 'N/A'
         assign_time = format_time(row['assign_time'])
         
         print(f"{row['area_code']:<12} {pop_str:<8} {hh_str:<8} | "
@@ -653,20 +653,20 @@ def generate_latex_tables(hp_analysis, per_area_df, output_dir):
     
     for _, row in per_area_df.iterrows():
         area = row['area_code']
-        pop = str(int(row['population'])) if row['population'] else '--'
-        hh = str(int(row['households'])) if row['households'] else '--'
-        
-        ind_rmse = f"{row['ind_rmse']:.2f}" if row['ind_rmse'] else '--'
-        ind_acc = f"{row['ind_acc']:.2f}" if row['ind_acc'] else '--'
-        ind_time = format_time(row['ind_time']) if row['ind_time'] else '--'
-        
-        hh_rmse = f"{row['hh_rmse']:.2f}" if row['hh_rmse'] else '--'
-        hh_acc = f"{row['hh_acc']:.2f}" if row['hh_acc'] else '--'
-        hh_time = format_time(row['hh_time']) if row['hh_time'] else '--'
-        
-        assign_loss = f"{row['assign_loss']:.2f}" if row['assign_loss'] else '--'
-        assign_acc = f"{row['assign_acc']:.2f}" if row['assign_acc'] else '--'
-        assign_time = format_time(row['assign_time']) if row['assign_time'] else '--'
+        pop = str(int(row['population'])) if pd.notna(row['population']) else '--'
+        hh = str(int(row['households'])) if pd.notna(row['households']) else '--'
+
+        ind_rmse = f"{row['ind_rmse']:.2f}" if pd.notna(row['ind_rmse']) else '--'
+        ind_acc = f"{row['ind_acc']:.2f}" if pd.notna(row['ind_acc']) else '--'
+        ind_time = format_time(row['ind_time']) if pd.notna(row['ind_time']) else '--'
+
+        hh_rmse = f"{row['hh_rmse']:.2f}" if pd.notna(row['hh_rmse']) else '--'
+        hh_acc = f"{row['hh_acc']:.2f}" if pd.notna(row['hh_acc']) else '--'
+        hh_time = format_time(row['hh_time']) if pd.notna(row['hh_time']) else '--'
+
+        assign_loss = f"{row['assign_loss']:.2f}" if pd.notna(row['assign_loss']) else '--'
+        assign_acc = f"{row['assign_acc']:.2f}" if pd.notna(row['assign_acc']) else '--'
+        assign_time = format_time(row['assign_time']) if pd.notna(row['assign_time']) else '--'
         
         latex_results.append(f"{area} & {pop} & {hh} & {ind_rmse} & {ind_acc} & {ind_time} & {hh_rmse} & {hh_acc} & {hh_time} & {assign_loss} & {assign_acc} & {assign_time} \\\\")
     

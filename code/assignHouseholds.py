@@ -179,6 +179,18 @@ def estimate_gat_memory_usage(num_persons, num_households, hidden_channels, atte
 args = parse_arguments()
 selected_area_code = args.area_code
 
+# Reproducibility (mirrors generateIndividuals.py / generateHouseholds.py so the
+# assignment stage is deterministic; this script uses random.choices, torch.rand,
+# torch.randperm, and Gumbel noise, none of which were seeded before).
+SEED = 42
+random.seed(SEED)
+np.random.seed(SEED)
+torch.manual_seed(SEED)
+if torch.cuda.is_available():
+    torch.cuda.manual_seed_all(SEED)
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
+
 print(f"Running Household Assignment Hyperparameter Tuning for area: {selected_area_code}")
 
 # Household size extraction function
